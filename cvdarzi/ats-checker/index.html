@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Free ATS Resume Checker: see if your CV passes (no sign-up) | CV Darzi</title>
+<meta name="description" content="Free ATS resume checker. Upload your CV (PDF, DOCX or text), add a job description and see in seconds how well it matches and whether hiring software can read it. Nothing is uploaded: it runs in your browser.">
+<link rel="canonical" href="https://aishnarolia-blip.github.io/cvdarzi/ats-checker/">
+<meta property="og:title" content="Free ATS Resume Checker | CV Darzi">
+<meta property="og:description" content="Check your CV against a job in seconds. Free, no sign-up, nothing is uploaded.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#F6F3ED">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:wght@400;500&family=Hanken+Grotesk:wght@400;500;600&display=swap">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"CV Darzi ATS Resume Checker","applicationCategory":"BusinessApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"INR"},"description":"Free ATS resume checker that scores a CV against a job description and checks whether applicant tracking software can read it."}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What is an ATS?","acceptedAnswer":{"@type":"Answer","text":"An Applicant Tracking System is software many companies use to collect and read CVs before a person does. It works best with a simple layout, standard headings and the same words the job description uses."}},
+{"@type":"Question","name":"Is this checker really free?","acceptedAnswer":{"@type":"Answer","text":"Yes. You can check as many CVs as you like with no sign-up. The full list of fixes and the CV rewriting tools are in the CV Darzi app."}},
+{"@type":"Question","name":"Is my CV uploaded anywhere?","acceptedAnswer":{"@type":"Answer","text":"No. Your CV is read and scored inside your own browser. It is not sent to any server."}},
+{"@type":"Question","name":"Is this the same score an employer's ATS gives?","acceptedAnswer":{"@type":"Answer","text":"No. The score is CV Darzi's own measure from a fixed set of rules. No employer or ATS vendor publishes its scoring, so no tool can show you theirs. It shows how well your CV matches the job and how easy it is for software to read."}},
+{"@type":"Question","name":"What makes a CV ATS-friendly?","acceptedAnswer":{"@type":"Answer","text":"One column, real text (not pictures), standard headings such as Experience, Education and Skills, dates in a clear format, and the skills the job asks for written the way the job writes them."}}
+]}
+</script>
+<style>
+:root{--bg:#F6F3ED;--panel:#FBF9F4;--ink:#141414;--muted:#5E5A54;--line:#DDD6CA;--accent:#7A1F2B;--navy:#14213D;--ok:#2F7D57;--warn:#B0561F;color-scheme:light}
+@media (prefers-color-scheme:dark){:root{--bg:#0B1220;--panel:#111A2E;--ink:#F3EEE4;--muted:#A3ACBD;--line:#26324A;--accent:#D4B27A;--navy:#D4B27A;--ok:#5FCF9D;--warn:#FF8A52;color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 'Hanken Grotesk',system-ui,sans-serif}
+main{max-width:760px;margin:0 auto;padding:36px 18px 72px}
+.cap{font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:var(--muted);font-weight:600}
+h1{font-family:'Bodoni Moda',Georgia,serif;font-weight:400;font-size:clamp(34px,7vw,52px);line-height:1.08;margin:12px 0 10px;letter-spacing:-.01em}
+h2{font-family:'Bodoni Moda',Georgia,serif;font-weight:400;font-size:26px;margin:44px 0 10px;padding-top:22px;border-top:1px solid var(--line)}
+.lede{color:var(--muted);font-size:18px;max-width:60ch}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:20px;margin-top:22px}
+label,.lab{display:block;font-weight:600;font-size:14px;margin:0 0 6px}
+.hint{color:var(--muted);font-size:13px;margin:6px 0 0}
+textarea,select,input[type=text]{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:10px 12px}
+textarea{min-height:130px;resize:vertical}
+textarea:focus-visible,select:focus-visible,input:focus-visible,button:focus-visible,a:focus-visible,.drop:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.drop{display:block;border:1.5px dashed var(--line);border-radius:6px;padding:22px 16px;text-align:center;cursor:pointer;background:var(--bg)}
+.drop:hover,.drop.on{border-color:var(--accent)}
+.drop b{display:block;font-size:16px}
+.drop small{color:var(--muted)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}
+@media(max-width:560px){.row{grid-template-columns:1fr}}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 26px;border:0;border-radius:4px;background:var(--navy);color:var(--bg);font:600 14px 'Hanken Grotesk',system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;text-decoration:none}
+.btn.out{background:none;border:1px solid var(--navy);color:var(--navy)}
+.btn[disabled]{opacity:.55;cursor:wait}
+.note{color:var(--muted);font-size:13px}
+.err{color:var(--warn);font-weight:600;margin:10px 0 0}
+#res{display:none}
+.score{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.big{font-family:'Bodoni Moda',Georgia,serif;font-size:84px;line-height:1}
+.of{color:var(--muted);font-size:22px}
+.verdict{font-size:18px;margin:4px 0 14px}
+.bar{height:8px;border-radius:4px;background:var(--line);overflow:hidden;margin:6px 0 14px}
+.bar i{display:block;height:100%;background:var(--accent);width:0;transition:width .6s}
+.parts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0}
+@media(max-width:560px){.parts{grid-template-columns:1fr}}
+.part{border:1px solid var(--line);border-radius:4px;padding:10px 12px;background:var(--bg)}
+.part b{display:block;font-size:26px;font-family:'Bodoni Moda',Georgia,serif;font-weight:400}
+.part span{font-size:13px;color:var(--muted)}
+.fix{border-top:1px solid var(--line);padding:14px 0}
+.fix h3{font-size:16px;margin:0 0 4px;display:flex;gap:10px;justify-content:space-between}
+.fix .pts{color:var(--ok);font-weight:600;white-space:nowrap}
+.fix p{margin:3px 0;font-size:15px}
+.lock{border:1px dashed var(--accent);border-radius:6px;padding:18px;margin-top:14px;background:var(--bg)}
+.lock h3{margin:0 0 6px;font-family:'Bodoni Moda',Georgia,serif;font-weight:400;font-size:22px}
+.cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px}
+details{border-top:1px solid var(--line);padding:12px 0}
+summary{cursor:pointer;font-weight:600}
+details p{color:var(--muted);margin:8px 0 0}
+footer{margin-top:50px;color:var(--muted);font-size:13px}
+a{color:var(--accent)}
+.college{margin-top:34px;border:1px solid var(--line);border-radius:6px;padding:18px;background:var(--panel)}
+.college b{font-family:'Bodoni Moda',Georgia,serif;font-weight:400;font-size:20px}
+</style>
+</head>
+<body>
+<main>
+  <div class="cap">CV Darzi · Free tool</div>
+  <h1>Free ATS resume checker</h1>
+  <p class="lede">See if hiring software can read your CV and how well it matches a job. Free, no sign-up, and your CV never leaves your browser.</p>
+
+  <form class="card" id="form" novalidate>
+    <label class="drop" id="drop" tabindex="0" for="file">
+      <b id="dropT">Choose your CV</b>
+      <small id="dropS">PDF, DOCX or TXT. Or paste the text below.</small>
+      <input id="file" type="file" accept=".pdf,.docx,.txt,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain" hidden>
+    </label>
+    <div style="margin-top:14px">
+      <label for="cv">Your CV text</label>
+      <textarea id="cv" placeholder="Paste your CV here if you do not want to upload a file."></textarea>
+    </div>
+    <div style="margin-top:14px">
+      <label for="jd">The job description <span class="note">(optional, but it gives a much better answer)</span></label>
+      <textarea id="jd" placeholder="Paste the full job description. Without it we only check how readable your CV is."></textarea>
+    </div>
+    <div class="row">
+      <div><label for="role">Role you are applying for <span class="note">(optional)</span></label><input type="text" id="role" placeholder="For example: Data Analyst" maxlength="90" autocomplete="off"></div>
+      <div><label for="mk">Country you are applying in</label>
+        <select id="mk"><option value="IN">India</option><option value="US">United States</option><option value="UK">United Kingdom</option><option value="EU">Europe</option><option value="CA">Canada</option><option value="AU">Australia</option></select></div>
+    </div>
+    <p class="err" id="err" role="alert" hidden></p>
+    <div class="cta"><button class="btn" id="go" type="submit">Check my CV</button></div>
+    <p class="hint">Your CV is read and scored in this page. Nothing is uploaded or stored.</p>
+  </form>
+
+  <section id="res" class="card" aria-live="polite">
+    <div class="lab" id="resLab">Your result</div>
+    <div class="score"><span class="big" id="sc">0</span><span class="of">/100</span></div>
+    <p class="verdict" id="vd"></p>
+    <div class="bar" aria-hidden="true"><i id="barf"></i></div>
+    <div class="parts" id="parts"></div>
+    <div id="fixes"></div>
+    <div class="lock" id="lock">
+      <h3 id="lockT">Get every fix, and a finished CV</h3>
+      <p id="lockP" class="note" style="font-size:15px"></p>
+      <div class="cta">
+        <a class="btn" id="appBtn" href="#">Get the CV Darzi app</a>
+      </div>
+      <p class="note" style="margin-top:10px">In the app: all fixes with how to do each, your weak lines rewritten for the job, a summary written for it, and your finished CV in 10 ATS-readable designs.</p>
+    </div>
+    <p class="note">This score is CV Darzi's own measure from a fixed set of rules. It is not the score of any employer's ATS, which no one can see.</p>
+  </section>
+
+  <h2>How this checker works</h2>
+  <p>Many companies use an Applicant Tracking System (ATS) to read CVs before a person does. This checker looks at two things: how easy your CV is for software to read, and, if you add a job description, how many of the skills the job asks for your CV actually shows. You get a score out of 100 and a ranked list of what to fix first.</p>
+
+  <h2>What we check</h2>
+  <ul>
+    <li><b>Layout:</b> one column or several, tables, and text that software cannot pick up.</li>
+    <li><b>Headings:</b> standard names such as Experience, Education and Skills.</li>
+    <li><b>Skills and keywords:</b> the skills the job lists, and whether your CV shows them in the words the job uses.</li>
+    <li><b>Experience:</b> the years the job asks for against the dated roles on your CV.</li>
+    <li><b>Contact details and length:</b> for the country you are applying in. A photo or date of birth is expected in some countries and a mistake in others.</li>
+  </ul>
+
+  <h2>Questions</h2>
+  <details><summary>Is it really free?</summary><p>Yes. Check as many CVs as you like, with no sign-up. The full fix list and the CV rewriting tools are in the CV Darzi app.</p></details>
+  <details><summary>Is my CV uploaded anywhere?</summary><p>No. The file is read in your browser and the score is worked out there. Close the page and it is gone.</p></details>
+  <details><summary>Is this the score a company's ATS will give me?</summary><p>No. Employers and ATS vendors do not publish how they score, so no tool can show you theirs. This shows how well your CV fits the job and how readable it is, which is what decides most rejections before a person looks.</p></details>
+  <details><summary>What is an ATS-friendly CV?</summary><p>One column, real text instead of pictures, standard headings, clear dates, and the skills the job asks for written the way the job writes them. Fancy templates with columns, icons and graphics are the most common reason a good CV is read wrongly.</p></details>
+  <details><summary>Can I paste a LinkedIn job link?</summary><p>Not on this page: paste the job description text. The CV Darzi app reads job links from LinkedIn, Naukri, Indeed and company sites for you.</p></details>
+
+  <div class="college">
+    <b>Are you a college or placement cell?</b>
+    <p style="margin:6px 0 0">Give every final-year student this checker plus the CV Darzi app, with a placement report for your cell. <a href="mailto:aish.narolia@gmail.com?subject=CV%20Darzi%20for%20our%20college">Ask about the college licence</a>.</p>
+  </div>
+
+  <footer>
+    <p><a href="/cvdarzi/">CV Darzi</a> · <a href="/cvdarzi/privacy.html">Privacy</a> · <a href="mailto:aish.narolia@gmail.com">Contact</a></p>
+  </footer>
+</main>
+
+<script type="module">
+import { score } from './js/scorer.js';
+import { readCvFile } from './js/parse.js';
+/* Set LIVE to true and APP_URL to the public Play Store link when CV Darzi is in production. */
+const LIVE = false;
+const APP_URL = 'https://play.google.com/store/apps/details?id=com.cvdarzi.app&referrer=utm_source%3Dweb_checker%26utm_medium%3Dseo';
+const $ = (id) => document.getElementById(id);
+const err = (m) => { $('err').hidden = !m; $('err').textContent = m || ''; };
+let meta = {};
+let busy = false;
+
+function setApp() {
+  const b = $('appBtn');
+  if (LIVE) { b.href = APP_URL; b.textContent = 'Get the CV Darzi app on Google Play'; }
+  else { b.href = 'mailto:aish.narolia@gmail.com?subject=CV%20Darzi%20early%20access&body=Please%20add%20me%20to%20the%20CV%20Darzi%20Android%20early-access%20list.'; b.textContent = 'Get early access to the app'; }
+}
+setApp();
+
+async function takeFile(f) {
+  if (!f) return;
+  err('');
+  $('dropT').textContent = f.name;
+  $('dropS').textContent = 'Reading…';
+  try {
+    const r = await readCvFile(f);
+    if (!r.text || r.text.replace(/\s/g, '').length < 80) throw new Error('We could not find readable text in this file. If it is a scanned picture, software cannot read it either. Try a text-based PDF or paste the text.');
+    $('cv').value = r.text; meta = r.meta || {};
+    $('dropS').textContent = 'Read. Check the text below, then press Check my CV.';
+  } catch (e) {
+    $('dropT').textContent = 'Choose your CV'; $('dropS').textContent = 'PDF, DOCX or TXT. Or paste the text below.';
+    err(e.message || 'We could not read this file. Please paste the text instead.');
+  }
+}
+$('file').addEventListener('change', () => takeFile($('file').files[0]));
+$('drop').addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); $('file').click(); } });
+['dragover', 'dragenter'].forEach((ev) => $('drop').addEventListener(ev, (e) => { e.preventDefault(); $('drop').classList.add('on'); }));
+['dragleave', 'drop'].forEach((ev) => $('drop').addEventListener(ev, () => $('drop').classList.remove('on')));
+$('drop').addEventListener('drop', (e) => { e.preventDefault(); takeFile(e.dataTransfer.files[0]); });
+$('cv').addEventListener('input', () => { meta = {}; });
+
+const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+$('form').addEventListener('submit', (e) => {
+  e.preventDefault();
+  if (busy) return;
+  err('');
+  const cv = $('cv').value.trim();
+  const jd = $('jd').value.trim();
+  if (cv.replace(/\s/g, '').length < 80) { err('Add your CV first: choose a file or paste the text.'); $('cv').focus(); return; }
+  if (jd && jd.length < 60) { err('That job description is very short. Paste the full description, or leave it empty to only check readability.'); $('jd').focus(); return; }
+  busy = true; $('go').disabled = true; $('go').textContent = 'Checking…';
+  setTimeout(() => {
+    try { show(score({ cvText: cv, jdText: jd, market: $('mk').value, meta, role: $('role').value.trim() }), !!jd); }
+    catch (x) { err('Something went wrong reading that CV. Please try pasting the text.'); }
+    busy = false; $('go').disabled = false; $('go').textContent = 'Check my CV';
+  }, 300);
+});
+
+function show(r, hasJd) {
+  const headline = hasJd ? r.score : r.parts.ats;
+  $('resLab').textContent = hasJd ? `Match with ${r.role || 'this job'}` : 'How readable your CV is for hiring software';
+  $('sc').textContent = headline;
+  $('barf').style.width = '0%'; requestAnimationFrame(() => { $('barf').style.width = headline + '%'; });
+  const v = headline >= 80 ? 'Strong' : headline >= 65 ? 'Good' : headline >= 50 ? 'Fair' : 'Weak';
+  $('vd').textContent = hasJd ? `${v} match. ${r.projected > r.score ? `If the fixes below are true for you, it can reach about ${r.projected}.` : 'Your CV fits this job well.'}` : `${v} readability. Add the job description to see how well your CV matches a job.`;
+  $('parts').innerHTML = (hasJd ? [['Skills match', r.parts.skills], ['Experience', r.parts.experience]] : []).concat([['Easy for software to read', r.parts.ats]]).map(([t, n]) => `<div class="part"><b>${n}</b><span>${t}</span></div>`).join('');
+  const fx = hasJd ? r.alterations : r.alterations.filter((a) => a.kind === 'ats');
+  const shown = fx.slice(0, 3);
+  $('fixes').innerHTML = fx.length
+    ? `<div class="lab" style="margin-top:14px">${hasJd ? 'What to fix first' : 'What to fix first'} (${fx.length})</div>` + shown.map((a, i) => `<div class="fix"><h3><span>${i + 1}. ${esc(a.title)}</span><span class="pts">+${a.points}</span></h3><p>${esc(a.detail)}</p><p><b>How:</b> ${esc(a.fix)}</p></div>`).join('')
+    : '<p class="verdict" style="margin-top:14px">Nothing to fix. Your CV is ready to send.</p>';
+  const more = fx.length - shown.length;
+  $('lock').style.display = 'block';
+  $('lockT').textContent = more > 0 ? `${more} more ${more === 1 ? 'fix' : 'fixes'}, and a finished CV` : 'Turn this into a finished CV';
+  $('lockP').textContent = more > 0 ? 'The app shows every fix with how to do it, then rewrites your weak lines for this job.' : 'The app rewrites your weak lines for the job and gives you the finished CV in 10 ATS-readable designs.';
+  const res = $('res'); res.style.display = 'block'; res.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+}
+</script>
+</body>
+</html>
